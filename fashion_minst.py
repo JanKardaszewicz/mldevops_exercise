@@ -5,31 +5,32 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 import numpy as np
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-transform = transforms.Compose([
-    transforms.ToTensor(),  # Convert images to PyTorch tensors
-    transforms.Normalize((0.5,), (0.5,))  # Normalize the images (mean, std)
-])
+transform = transforms.Compose(
+    [
+        transforms.ToTensor(),  # Convert images to PyTorch tensors
+        transforms.Normalize((0.5,), (0.5,)),  # Normalize the images (mean, std)
+    ]
+)
 
 # Load the dataset
-train_dataset = datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
-test_dataset = datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
+train_dataset = datasets.FashionMNIST(root="./data", train=True, download=True, transform=transform)
+test_dataset = datasets.FashionMNIST(root="./data", train=False, download=True, transform=transform)
 
 # Create data loaders
 train_loader = DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
 test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
 
-
 class FashionMNISTModel(nn.Module):
     def __init__(self):
         super(FashionMNISTModel, self).__init__()
         self.fc1 = nn.Linear(28 * 28, 512)  # 28x28 pixels
-        self.fc2 = nn.Linear(512, 256)     
-        self.fc3 = nn.Linear(256, 128)      
-        self.fc4 = nn.Linear(128, 10)        # 10 classes
-        self.relu = nn.ReLU()              
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, 128)
+        self.fc4 = nn.Linear(128, 10)  # 10 classes
+        self.relu = nn.ReLU()
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
@@ -38,7 +39,7 @@ class FashionMNISTModel(nn.Module):
         x = self.relu(self.fc2(x))
         x = self.relu(self.fc3(x))
         x = self.softmax(self.fc4(x))
-        
+
         return x
 
 
@@ -65,7 +66,7 @@ for epoch in range(epochs):
 
         running_loss += loss.item()
 
-    print(f'Epoch [{epoch + 1}/{epochs}], Loss: {running_loss / len(train_loader):.4f}')
+    print(f"Epoch [{epoch + 1}/{epochs}], Loss: {running_loss / len(train_loader):.4f}")
 
 
 model.eval()
@@ -88,4 +89,4 @@ for true, pred in zip(all_labels, all_preds):
 accuracies = confusion_matrix.diagonal() / confusion_matrix.sum(axis=1)
 
 for i, acc in enumerate(accuracies):
-    print(f'Dokładność klasy {i}: {acc:.2f}')
+    print(f"Dokładność klasy {i}: {acc:.2f}")

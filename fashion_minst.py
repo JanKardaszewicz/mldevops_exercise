@@ -25,7 +25,7 @@ test_loader = DataLoader(dataset=test_dataset, batch_size=64, shuffle=False)
 
 class FashionMNISTModel(nn.Module):
     def __init__(self):
-        super(FashionMNISTModel, self).__init__()
+        super().__init__()
         self.fc1 = nn.Linear(28 * 28, 512)  # 28x28 pixels
         self.fc2 = nn.Linear(512, 256)
         self.fc3 = nn.Linear(256, 128)
